@@ -1,104 +1,144 @@
-# New Nx Repository
+# 🎮 10 Simple Games Collection
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+Tập hợp 10 game HTML5 đơn giản và vui nhộn, được xây dựng với HTML, Tailwind CSS và TypeScript.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
-
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/js?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
-
-## Generate a library
-
-```sh
-npx nx g @nx/js:lib packages/pkg1 --publishable --importPath=@my-org/pkg1
-```
-
-## Run tasks
-
-To build the library use:
-
-```sh
-npx nx build pkg1
-```
-
-To run any task with Nx use:
-
-```sh
-npx nx <target> <project-name>
-```
-
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Versioning and releasing
-
-To version and release the library use
+## 📁 Cấu trúc dự án
 
 ```
-npx nx release
+├── src/
+│   ├── games/              # Thư mục chứa code các game
+│   │   ├── 2048/
+│   │   │   └── game.ts    # Game 2048
+│   │   ├── snake/
+│   │   ├── tic-tac-toe/
+│   │   └── ...
+│   └── main.ts            # File chính - config danh sách game
+├── dist/
+│   ├── index.html         # Trang chủ - danh sách game
+│   ├── games/             # Các file HTML của game
+│   │   ├── 2048.html
+│   │   ├── snake.html
+│   │   └── ...
+│   └── js/                # JavaScript đã compile
+│       ├── main.js
+│       └── games/
+├── package.json
+├── tsconfig.json
+└── tsconfig.base.json
 ```
 
-Pass `--dry-run` to see what would happen without actually releasing the library.
+## 🎯 Danh sách Game
 
-[Learn more about Nx release &raquo;](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+1. **2048** 🎮 - Game puzzle ghép số gây nghiện
+2. **Snake** 🐍 - Game rắn săn mồi cổ điển
+3. **Tic Tac Toe** ⭕ - Trò chơi O-X
+4. **Memory Cards** 🃏 - Game test trí nhớ
+5. **Flappy Bird** 🐦 - Bay qua các ống nước
+6. _(Đang phát triển...)_
 
-## Keep TypeScript project references up to date
+## 🚀 Cài đặt & Chạy
 
-Nx automatically updates TypeScript [project references](https://www.typescriptlang.org/docs/handbook/project-references.html) in `tsconfig.json` files to ensure they remain accurate based on your project dependencies (`import` or `require` statements). This sync is automatically done when running tasks such as `build` or `typecheck`, which require updated references to function correctly.
+### 1. Cài đặt dependencies
 
-To manually trigger the process to sync the project graph dependencies information to the TypeScript project references, run the following command:
-
-```sh
-npx nx sync
+```bash
+npm install
 ```
 
-You can enforce that the TypeScript project references are always in the correct state when running in CI by adding a step to your CI job configuration that runs the following command:
+### 2. Development mode (với hot reload)
 
-```sh
-npx nx sync:check
+```bash
+npm run dev
 ```
 
-[Learn more about nx sync](https://nx.dev/reference/nx-commands#sync)
+Dự án sẽ chạy tại: **http://localhost:3000**
 
-## Nx Cloud
+### 3. Build cho production
 
-Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Set up CI (non-Github Actions CI)
-
-**Note:** This is only required if your CI provider is not GitHub Actions.
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
+```bash
+npm run build
 ```
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 📝 Scripts
 
-## Install Nx Console
+- `npm run dev` - Chạy development server với auto-reload
+- `npm run build` - Compile TypeScript
+- `npm run watch:ts` - Watch TypeScript changes
+- `npm run serve` - Chạy live server
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+## 🎨 Thêm Game Mới
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Bước 1: Tạo folder game trong `src/games/`
 
-## Useful links
+```
+src/games/your-game/
+└── game.ts
+```
 
-Learn more:
+### Bước 2: Tạo file HTML trong `dist/games/`
 
-- [Learn more about this workspace setup](https://nx.dev/nx-api/js?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+```html
+<!-- dist/games/your-game.html -->
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <title>Your Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <!-- Game UI -->
+    <script src="../js/games/your-game/game.js"></script>
+  </body>
+</html>
+```
 
-And join the Nx community:
+### Bước 3: Thêm vào danh sách trong `src/main.ts`
 
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+```typescript
+const games: Game[] = [
+  // ... games hiện có
+  {
+    id: 'your-game',
+    name: 'Your Game',
+    description: 'Mô tả game của bạn',
+    htmlFile: 'your-game.html',
+    icon: '🎲',
+    difficulty: 'Easy',
+    category: 'Arcade',
+  },
+];
+```
+
+### Bước 4: Build và test
+
+```bash
+npm run build
+npm run dev
+```
+
+## 🛠 Công nghệ sử dụng
+
+- **HTML5** - Cấu trúc trang web
+- **Tailwind CSS** (CDN) - Utility-first CSS framework
+- **TypeScript** - JavaScript với type safety
+- **Live Server** - Development server với hot reload
+
+## ✨ Tính năng
+
+- ✅ TypeScript cho code dễ bảo trì
+- ✅ Tailwind CSS (CDN) - không cần build CSS
+- ✅ Hot reload trong development
+- ✅ Cấu trúc module rõ ràng, dễ mở rộng
+- ✅ Responsive design
+- ✅ Game list dễ config trong `src/main.ts`
+
+## 📱 Responsive
+
+Tất cả các game đều được thiết kế responsive, chơi được trên:
+
+- 💻 Desktop
+- 📱 Mobile
+- 📱 Tablet
+
+## 📄 License
+
+MIT License - Tự do sử dụng cho mục đích học tập và giải trí!

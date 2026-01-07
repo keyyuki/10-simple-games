@@ -1,21 +1,22 @@
 {
-  "name": "@org/source",
-  "version": "0.0.0",
-  "license": "MIT",
-  "scripts": {},
-  "private": true,
-  "dependencies": {},
-  "devDependencies": {
-    "@nx/js": "22.3.3",
-    "@swc-node/register": "~1.9.1",
-    "@swc/core": "~1.5.7",
-    "@swc/helpers": "~0.5.11",
-    "nx": "22.3.3",
-    "prettier": "^2.6.2",
-    "tslib": "^2.3.0",
-    "typescript": "~5.9.2"
+  "name": "my-10-simple-games",
+  "version": "1.0.0",
+  "description": "10 simple games with HTML, CSS, Tailwind and TypeScript",
+  "scripts": {
+    "dev": "concurrently \"npm run watch\" \"npm run serve\"",
+    "build": "npm run build:main && npm run build:games",
+    "build:main": "esbuild src/main.ts --bundle --outfile=dist/js/main.js --format=esm",
+    "build:games": "esbuild \"src/games/2048/game.ts\" --bundle --outfile=dist/js/games/2048.js --format=iife",
+    "watch": "concurrently \"npm run watch:main\" \"npm run watch:games\"",
+    "watch:main": "esbuild src/main.ts --bundle --outfile=dist/js/main.js --format=esm --watch",
+    "watch:games": "esbuild \"src/games/2048/game.ts\" --bundle --outfile=dist/js/games/2048.js --format=iife --watch",
+    "serve": "live-server ./dist --port=3000"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "concurrently": "^8.2.2",
+    "esbuild": "^0.19.11",
+    "live-server": "^1.2.2",
+    "typescript": "^5.3.3"
+  }
 }
