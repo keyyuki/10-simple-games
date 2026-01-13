@@ -10,13 +10,19 @@
     "watch": "concurrently \"npm run watch:main\" \"npm run watch:games\"",
     "watch:main": "esbuild src/main.ts --bundle --outfile=dist/js/main.js --format=esm --watch",
     "watch:games": "esbuild \"src/games/2048/game.ts\" --bundle --outfile=dist/js/games/2048.js --format=iife --watch",
-    "serve": "live-server ./dist --port=3000"
+    "serve": "live-server ./dist --port=3000",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.10.0",
     "concurrently": "^8.2.2",
     "esbuild": "^0.19.11",
+    "jest": "^30.2.0",
     "live-server": "^1.2.2",
+    "ts-jest": "^29.4.6",
     "typescript": "^5.3.3"
   }
 }

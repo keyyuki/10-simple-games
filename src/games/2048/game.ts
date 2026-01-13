@@ -4,6 +4,7 @@ import {
   hasAdjacentMatches,
   isGameOver,
   transposeMatrix,
+  move,
 } from './helper';
 
 interface Tile {
@@ -37,6 +38,8 @@ class Game2048 {
   private padding = 10;
   private tileSize = 87.5; // (400 - 5*10) / 4
   private isAnimating = false;
+
+  private nextMatrix: number[][] = [];
 
   constructor(private ctx: CanvasRenderingContext2D) {
     this.initGame();
@@ -99,65 +102,12 @@ class Game2048 {
     return matrix;
   }
 
-  private finalizeMove() {
-    const newTiles: Tile[] = [];
-    const board = this.getBoardMatrix();
-
-    for (let r = 0; r < this.size; r++) {
-      const line = board[r];
-      const newLine = handleLine(line);
-      for (let c = 0; c < this.size; c++) {
-        if (newLine[c] !== 0) {
-          newTiles.push({
-            value: newLine[c],
-            row: r,
-            col: c,
-            x: this.padding + c * (this.tileSize + this.padding),
-            y: this.padding + r * (this.tileSize + this.padding),
-            targetX: this.padding + c * (this.tileSize + this.padding),
-            targetY: this.padding + r * (this.tileSize + this.padding),
-          });
-        }
-      }
-    }
-
-    this.tiles = newTiles;
-    this.addRandomTile();
-
-    if (isGameOver(this.getBoardMatrix())) {
-      alert('Game Over!');
-    }
-  }
-
   public move(direction: 'left' | 'right' | 'up' | 'down') {
     if (this.isAnimating) return;
 
     let board = this.getBoardMatrix();
-
-    if (direction === 'right') {
-      board = board.map((row) => row.reverse());
-    } else if (direction === 'up') {
-      board = transposeMatrix(board);
-    } else if (direction === 'down') {
-      board = transposeMatrix(board).map((row) => row.reverse());
-    }
-
-    const newBoard: number[][] = [];
-    for (let r = 0; r < this.size; r++) {
-      newBoard.push(handleLine(board[r]));
-    }
-
-    if (direction === 'right') {
-      for (let r = 0; r < this.size; r++) {
-        newBoard[r] = newBoard[r].reverse();
-      }
-    } else if (direction === 'up') {
-      board = transposeMatrix(newBoard);
-    } else if (direction === 'down') {
-      board = transposeMatrix(newBoard).map((row) => row.reverse());
-    } else {
-      board = newBoard;
-    }
+    const newBoard = move(board, direction);
+    board = newBoard;
 
     // Cập nhật vị trí mục tiêu cho từng tile
     this.tiles.forEach((tile) => {
@@ -169,6 +119,7 @@ class Game2048 {
     });
 
     this.isAnimating = true;
+    this.nextMatrix = board;
   }
 
   private findTileNewPosition(
@@ -183,25 +134,25 @@ class Game2048 {
 
     if (direction === 'left') {
       for (let c = 0; c < size; c++) {
-        if (board[row][c] === value) {
+        if (board[row][c] === value || board[row][c] === 2 * value) {
           return [row, c];
         }
       }
     } else if (direction === 'right') {
       for (let c = size - 1; c >= 0; c--) {
-        if (board[row][c] === value) {
+        if (board[row][c] === value || board[row][c] === 2 * value) {
           return [row, c];
         }
       }
     } else if (direction === 'up') {
       for (let r = 0; r < size; r++) {
-        if (board[r][col] === value) {
+        if (board[r][col] === value || board[r][col] === 2 * value) {
           return [r, col];
         }
       }
     } else if (direction === 'down') {
       for (let r = size - 1; r >= 0; r--) {
-        if (board[r][col] === value) {
+        if (board[r][col] === value || board[r][col] === 2 * value) {
           return [r, col];
         }
       }
@@ -267,6 +218,36 @@ class Game2048 {
         tile.y + this.tileSize / 2
       );
     });
+  }
+
+  private finalizeMove() {
+    const newTiles: Tile[] = [];
+    const board = this.nextMatrix;
+    const mergeBoard: number[][] = [];
+
+    for (let r = 0; r < this.size; r++) {
+      for (let c = 0; c < this.size; c++) {
+        const value = board[r][c];
+        if (value !== 0) {
+          newTiles.push({
+            value,
+            row: r,
+            col: c,
+            x: this.padding + c * (this.tileSize + this.padding),
+            y: this.padding + r * (this.tileSize + this.padding),
+            targetX: this.padding + c * (this.tileSize + this.padding),
+            targetY: this.padding + r * (this.tileSize + this.padding),
+          });
+        }
+      }
+    }
+
+    this.tiles = newTiles;
+    this.addRandomTile();
+
+    if (isGameOver(this.getBoardMatrix())) {
+      alert('Game Over!');
+    }
   }
 
   // Vòng lặp chính

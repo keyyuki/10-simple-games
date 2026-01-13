@@ -27,6 +27,36 @@ export function transposeMatrix(matrix: number[][]): number[][] {
   return transposed;
 }
 
+export function move(
+  matrix: number[][],
+  direction: 'left' | 'right' | 'up' | 'down'
+): number[][] {
+  let board = matrix;
+  if (direction === 'right') {
+    board = board.map((row) => row.reverse());
+  } else if (direction === 'up') {
+    board = transposeMatrix(board);
+  } else if (direction === 'down') {
+    board = transposeMatrix(board).map((row) => row.reverse());
+  }
+
+  const newBoard: number[][] = [];
+  for (let r = 0; r < board.length; r++) {
+    newBoard.push(handleLine(board[r]));
+  }
+
+  if (direction === 'right') {
+    for (let r = 0; r < newBoard.length; r++) {
+      newBoard[r] = newBoard[r].reverse();
+    }
+  } else if (direction === 'up') {
+    return transposeMatrix(newBoard);
+  } else if (direction === 'down') {
+    return transposeMatrix(newBoard.map((row) => row.reverse()));
+  }
+  return newBoard;
+}
+
 export function getEmptyPositions(board: number[][]): [number, number][] {
   const emptyPositions: [number, number][] = [];
   for (let i = 0; i < board.length; i++) {
