@@ -57,6 +57,102 @@ export function move(
   return newBoard;
 }
 
+export function getTransitionTargetInLine(
+  oldLine: number[],
+  newLine: number[]
+): { from: number; to: number }[] {
+  let accumulate = 0;
+  let cursor = 0;
+  const results: { from: number; to: number }[] = [];
+  for (let i = 0; i < oldLine.length; i++) {
+    const value = oldLine[i];
+    if (value === 0) continue;
+
+    accumulate += +value;
+    if (accumulate > newLine[cursor]) {
+      accumulate = +value;
+      cursor++;
+    }
+    results.push({ from: i, to: cursor });
+  }
+  return results;
+}
+
+export function getTransitionTargets(params: {
+  oldBoard: number[][];
+  newBoard: number[][];
+  direction: 'left' | 'right' | 'up' | 'down';
+}): { col: number; row: number; targetCol: number; targetRow: number }[] {
+  const { oldBoard, newBoard, direction } = params;
+  const size = oldBoard.length;
+  const results: {
+    col: number;
+    row: number;
+    targetCol: number;
+    targetRow: number;
+  }[] = [];
+  if (direction === 'left') {
+    for (let r = 0; r < size; r++) {
+      const transitions = getTransitionTargetInLine(oldBoard[r], newBoard[r]);
+      transitions.forEach((t) => {
+        results.push({ row: r, col: t.from, targetRow: r, targetCol: t.to });
+      });
+    }
+  }
+  if (direction === 'right') {
+    for (let r = 0; r < size; r++) {
+      const transitions = getTransitionTargetInLine(
+        oldBoard[r].slice().reverse(),
+        newBoard[r].slice().reverse()
+      );
+      transitions.forEach((t) => {
+        results.push({
+          row: r,
+          col: size - 1 - t.from,
+          targetRow: r,
+          targetCol: size - 1 - t.to,
+        });
+      });
+    }
+  }
+  if (direction === 'up') {
+    for (let c = 0; c < size; c++) {
+      const oldLine = new Array<number>(size)
+        .fill(0)
+        .map((_, r) => oldBoard[r][c]);
+      const newLine = new Array<number>(size)
+        .fill(0)
+        .map((_, r) => newBoard[r][c]);
+      const transitions = getTransitionTargetInLine(oldLine, newLine);
+      transitions.forEach((t) => {
+        results.push({ row: t.from, col: c, targetRow: t.to, targetCol: c });
+      });
+    }
+  }
+  if (direction === 'down') {
+    for (let c = 0; c < size; c++) {
+      const oldLine = new Array<number>(size)
+        .fill(0)
+        .map((_, r) => oldBoard[r][c])
+        .reverse();
+      const newLine = new Array<number>(size)
+        .fill(0)
+        .map((_, r) => newBoard[r][c])
+        .reverse();
+      const transitions = getTransitionTargetInLine(oldLine, newLine);
+      transitions.forEach((t) => {
+        results.push({
+          row: size - 1 - t.from,
+          col: c,
+          targetRow: size - 1 - t.to,
+          targetCol: c,
+        });
+      });
+    }
+  }
+  return results;
+}
+
 export function getEmptyPositions(board: number[][]): [number, number][] {
   const emptyPositions: [number, number][] = [];
   for (let i = 0; i < board.length; i++) {

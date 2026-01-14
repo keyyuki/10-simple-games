@@ -1,4 +1,4 @@
-import { move } from './helper';
+import { move, getTransitionTargetInLine } from './helper';
 
 describe('move function', () => {
   it('should move left correctly', () => {
@@ -66,6 +66,53 @@ describe('move function', () => {
       [2, 4, 4, 4],
     ];
     const result = move(board, 'down');
+    expect(result).toEqual(expected);
+  });
+});
+
+describe('getTransitionTargetInLine function', () => {
+  it('should return correct transition targets 1', () => {
+    const oldLine = [2, 2, 4, 0];
+    const newLine = [4, 4, 0, 0];
+    const expected = [
+      { from: 0, to: 0 },
+      { from: 1, to: 0 },
+      { from: 2, to: 1 },
+    ];
+    const result = getTransitionTargetInLine(oldLine, newLine);
+    expect(result).toEqual(expected);
+  });
+
+  it('should return correct transition targets 2', () => {
+    const oldLine = [2, 0, 4, 0];
+    const newLine = [2, 4, 0, 0];
+    const expected = [
+      { from: 0, to: 0 },
+      { from: 2, to: 1 },
+    ];
+    const result = getTransitionTargetInLine(oldLine, newLine);
+    expect(result).toEqual(expected);
+  });
+
+  it('should return correct transition targets 3', () => {
+    const oldLine = [2, 4, 2, 0];
+    const newLine = [2, 4, 2, 0];
+    const expected = [
+      { from: 0, to: 0 },
+      { from: 1, to: 1 },
+      { from: 2, to: 2 },
+    ];
+    const result = getTransitionTargetInLine(oldLine, newLine);
+    expect(result).toEqual(expected);
+  });
+  it('should return correct transition targets 4', () => {
+    const oldLine = [4, 2, 0, 0];
+    const newLine = [4, 2, 0, 0];
+    const expected = [
+      { from: 0, to: 0 },
+      { from: 1, to: 1 },
+    ];
+    const result = getTransitionTargetInLine(oldLine, newLine);
     expect(result).toEqual(expected);
   });
 });

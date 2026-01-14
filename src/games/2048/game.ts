@@ -5,18 +5,9 @@ import {
   isGameOver,
   transposeMatrix,
   move,
+  getTransitionTargets,
 } from './helper';
-
-interface Tile {
-  value: number;
-  row: number; // Vị trí logic trên lưới (0-3)
-  col: number; // Vị trí logic trên lưới (0-3)
-  x: number; // Tọa độ pixel hiện tại trên Canvas
-  y: number; // Tọa độ pixel hiện tại trên Canvas
-  targetX: number; // Tọa độ pixel đích cần tới
-  targetY: number; // Tọa độ pixel đích cần tới
-  isMerging?: boolean; // Hiệu ứng phóng to khi gộp
-}
+import { Tile } from './type';
 
 const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d')!;
@@ -106,14 +97,23 @@ class Game2048 {
     if (this.isAnimating) return;
 
     let board = this.getBoardMatrix();
+    const oldBoard = JSON.parse(JSON.stringify(board)); // Sao chép bàn cờ cũ
     const newBoard = move(board, direction);
     board = newBoard;
 
     // Cập nhật vị trí mục tiêu cho từng tile
+    const transitions = getTransitionTargets({
+      oldBoard,
+      newBoard,
+      direction,
+    });
     this.tiles.forEach((tile) => {
-      const newRowCol = this.findTileNewPosition(tile, board, direction);
-      tile.row = newRowCol[0];
-      tile.col = newRowCol[1];
+      const newRowCol = transitions.find(
+        (t) => t.row === tile.row && t.col === tile.col
+      );
+      if (!newRowCol) return;
+      tile.row = newRowCol.targetRow;
+      tile.col = newRowCol.targetCol;
       tile.targetX = this.padding + tile.col * (this.tileSize + this.padding);
       tile.targetY = this.padding + tile.row * (this.tileSize + this.padding);
     });
