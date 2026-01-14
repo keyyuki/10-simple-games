@@ -61,7 +61,21 @@ class Game2048 {
       }
     });
 
+    document.getElementById('resetBtn')?.addEventListener('click', () => {
+      this.reset();
+    });
+    document.getElementById('new-game')?.addEventListener('click', () => {
+      this.reset();
+    });
+
     this.gameLoop();
+  }
+
+  reset() {
+    this.tiles = [];
+    this.isAnimating = false;
+    this.nextMatrix = [];
+    this.initGame();
   }
 
   private addRandomTile() {
@@ -120,45 +134,6 @@ class Game2048 {
 
     this.isAnimating = true;
     this.nextMatrix = board;
-  }
-
-  private findTileNewPosition(
-    tile: Tile,
-    board: number[][],
-    direction: 'left' | 'right' | 'up' | 'down'
-  ): [number, number] {
-    const size = this.size;
-    let row = tile.row;
-    let col = tile.col;
-    const value = tile.value;
-
-    if (direction === 'left') {
-      for (let c = 0; c < size; c++) {
-        if (board[row][c] === value || board[row][c] === 2 * value) {
-          return [row, c];
-        }
-      }
-    } else if (direction === 'right') {
-      for (let c = size - 1; c >= 0; c--) {
-        if (board[row][c] === value || board[row][c] === 2 * value) {
-          return [row, c];
-        }
-      }
-    } else if (direction === 'up') {
-      for (let r = 0; r < size; r++) {
-        if (board[r][col] === value || board[r][col] === 2 * value) {
-          return [r, col];
-        }
-      }
-    } else if (direction === 'down') {
-      for (let r = size - 1; r >= 0; r--) {
-        if (board[r][col] === value || board[r][col] === 2 * value) {
-          return [r, col];
-        }
-      }
-    }
-
-    return [tile.row, tile.col]; // Không tìm thấy vị trí mới
   }
 
   private update() {
@@ -225,6 +200,7 @@ class Game2048 {
     const board = this.nextMatrix;
     const mergeBoard: number[][] = [];
 
+    let maxScore = 0;
     for (let r = 0; r < this.size; r++) {
       for (let c = 0; c < this.size; c++) {
         const value = board[r][c];
@@ -238,12 +214,18 @@ class Game2048 {
             targetX: this.padding + c * (this.tileSize + this.padding),
             targetY: this.padding + r * (this.tileSize + this.padding),
           });
+
+          if (value > maxScore) {
+            maxScore = value;
+          }
         }
       }
     }
 
     this.tiles = newTiles;
     this.addRandomTile();
+
+    document.getElementById('score')!.innerText = maxScore.toString();
 
     if (isGameOver(this.getBoardMatrix())) {
       alert('Game Over!');
